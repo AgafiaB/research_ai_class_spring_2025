@@ -60,4 +60,4 @@ class SQLDataset(Dataset):
         finally:
             cursor.close()
             
-        return image, label
+        return image
