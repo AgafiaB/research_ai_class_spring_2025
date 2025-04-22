@@ -6,8 +6,6 @@ import os
 import torch
 import logging
 
-# logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(messages)s')
-# log = logging.getLogger(__name__)
 
 # create a Dataset class to retrieve the data
 class SQLDataset_Informative(Dataset):
@@ -39,8 +37,6 @@ class SQLDataset_Informative(Dataset):
         count = cursor.fetchone()
         cursor.close()
 
-        # log.debug(f'Dataset length: {count}')
-
         return count[0]
     
     def __getitem__(self, idx):
@@ -49,8 +45,6 @@ class SQLDataset_Informative(Dataset):
             Retrieves a tuple of (torch.tensor, string) where the first object is a 3D tensor of image data and the string is the label
         '''
         # retrieve an image from the sql database
-
-        # log.debug(f'Fetching item at index {idx}')
 
         cursor = self.conn.cursor()
         try:
@@ -76,9 +70,5 @@ class SQLDataset_Informative(Dataset):
         finally:
             cursor.close()
 
-        # print(f'image shape after transform: {image.shape}')
-        
-        # log.debug(f'image and label from __getitem__: {image, label}')
-        # log.debug(f'image and label shapes from __getitem__: {image.shape}, {label.shape}')
 
         return image, label
