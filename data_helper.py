@@ -111,4 +111,4 @@ class SQLDataset_Informative(Dataset):
         finally:
             cursor.close()
 
-        return image, label
+        return {'image': image, 'label': label}
