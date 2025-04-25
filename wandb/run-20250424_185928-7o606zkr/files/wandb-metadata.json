@@ -1,0 +1,40 @@
+{
+  "os":  "Windows-11-10.0.22631-SP0",
+  "python":  "CPython 3.12.3",
+  "startedAt":  "2025-04-24T23:59:28.237107Z",
+  "program":  "<python with no main file>",
+  "git":  {
+    "remote":  "https://github.com/AgafiaB/research_ai_class_spring_2025.git",
+    "commit":  "e60056125cd134e2b9a2c310a668ee1c0691b78d"
+  },
+  "email":  "agafiabschool@gmail.com",
+  "root":  "c:\\Users\\bowdenaa\\ai_research_proj_spring_2025\\research_ai_class_spring_2025",
+  "host":  "cs140764",
+  "executable":  "c:\\Users\\bowdenaa\\AppData\\Local\\anaconda3\\envs\\torch\\python.exe",
+  "cpu_count":  12,
+  "cpu_count_logical":  20,
+  "gpu":  "NVIDIA GeForce RTX 3060 Ti",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "1013310287872",
+      "used":  "536826327040"
+    }
+  },
+  "memory":  {
+    "total":  "16961114112"
+  },
+  "cpu":  {
+    "count":  12,
+    "countLogical":  20
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 3060 Ti",
+      "memoryTotal":  "8589934592",
+      "cudaCores":  4864,
+      "architecture":  "Ampere"
+    }
+  ],
+  "cudaVersion":  "12.8"
+}
