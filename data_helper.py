@@ -37,24 +37,30 @@ class SQLDataset_Informative(Dataset):
         self.is_val = is_val
         self.is_test = is_test
 
+        cursor = self.conn.cursor()
+
         # we need a list of available indices 
         # what idxs are available to use for this database? - depends on the dataset type
         if not (self.is_train or self.is_val or self.is_test): # if no dataset type specified
-            self.possible_sql_idxs = range(self.__len__())
-        else:
-            cursor = self.conn.cursor()
             query = 'SELECT COUNT(image_id) FROM Images'
             cursor.execute(query)
-            count = cursor.fetchone()
+            count = cursor.fetchone()[0]
+            self.possible_sql_idxs = range(count)
+        else:
+            
+            query = 'SELECT COUNT(image_id) FROM Images'
+            cursor.execute(query)
+            count = cursor.fetchone()[0]
+            
 
             # below, we use +1 because SQL indexing starts at 1
             if is_train: 
-                self.possible_sql_idxs = [idx+1 for idx in range(count) if (idx+1 % 20) < 18]
+                self.possible_sql_idxs = [i+1 for i in range(count) if (((i+1) % 20) < 18)]
             elif is_val:
-                self.possible_sql_idxs = [idx+1 for idx in range(count) if (idx+1 % 20) == 18]
+                self.possible_sql_idxs = [i+1 for i in range(count) if (((i+1) % 20) == 18)]
             else: # must be test
-                self.possible_sql_idxs = [idx+1 for idx in range(count) if (idx+1 % 20) > 18]
-            cursor.close()
+                self.possible_sql_idxs = [i+1 for i in range(count) if (((i+1) % 20) > 18)]
+        cursor.close()
 
     def __len__(self):
         '''
