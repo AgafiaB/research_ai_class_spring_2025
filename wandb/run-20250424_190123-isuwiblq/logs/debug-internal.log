@@ -1,0 +1,7 @@
+{"time":"2025-04-24T19:01:23.8403586-05:00","level":"INFO","msg":"stream: starting","core version":"0.19.10","symlink path":"c:\\Users\\bowdenaa\\ai_research_proj_spring_2025\\research_ai_class_spring_2025\\wandb\\run-20250424_190123-isuwiblq\\logs\\debug-core.log"}
+{"time":"2025-04-24T19:01:24.0483347-05:00","level":"INFO","msg":"created new stream","id":"isuwiblq"}
+{"time":"2025-04-24T19:01:24.0483347-05:00","level":"INFO","msg":"stream: started","id":"isuwiblq"}
+{"time":"2025-04-24T19:01:24.0483347-05:00","level":"INFO","msg":"handler: started","stream_id":"isuwiblq"}
+{"time":"2025-04-24T19:01:24.0483347-05:00","level":"INFO","msg":"sender: started","stream_id":"isuwiblq"}
+{"time":"2025-04-24T19:01:24.0483347-05:00","level":"INFO","msg":"writer: Do: started","stream_id":"isuwiblq"}
+{"time":"2025-04-24T19:01:24.2449552-05:00","level":"INFO","msg":"Starting system monitor"}
