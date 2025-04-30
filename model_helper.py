@@ -64,8 +64,10 @@ class InvertedResidual(nn.Module):
 
         if expand_ratio != 1:
             # add expansion 
-            layers.append(Conv2dNormActivation(in_channels, hidden_dim, kernel_size=3, stride=stride, 
+            layers.append(Conv2dNormActivation(in_channels, hidden_dim, kernel_size=1, stride=stride, 
                                                norm_layer=norm_layer, activation_layer=nn.ReLU6))
+            
+            # layers.append(nn.Conv2d(in_channels, hidden_dim, kernel_size=1, stride=1, padding=0, bias=False))
         # depthwise conv => pointwise => norm_layer
         # hidden_dim == in_channels if expand_ratio==1
         # b/c groups = hidden_dim, each input channel is convolved with its own set of filters
