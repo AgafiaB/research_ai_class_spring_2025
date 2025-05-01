@@ -1,13 +1,13 @@
 import torch.nn as nn
 class Inv2d(nn.Module):
-    def __init__(self, channels, reduction=1, kernel_size=3, group_ch=1, stride=1, padding=1, dilation=1):
+    def __init__(self, in_channels, reduction=1, kernel_size=3, group_ch=1, stride=1, padding=1, dilation=1):
         super().__init__()
 
         self.k = kernel_size
         self.group_ch = group_ch
-        self.in_channels = channels
-        self.out_channels = channels
-        self.g = channels // group_ch
+        self.in_channels = in_channels
+        self.out_channels = in_channels
+        self.g = in_channels // group_ch
         self.r = reduction
 
         self.stride=stride
@@ -16,30 +16,30 @@ class Inv2d(nn.Module):
 
         # avg pool is for adjusting the kernel and therefore output based on the stride
         self.o = nn.AvgPool2d(kernel_size=stride, stride=stride) if stride > 1 else nn.Identity()
-        self.reduce = nn.Conv2d(channels, channels // reduction, 1)
-        self.batch_norm = nn.BatchNorm2d(channels//reduction)
-        self.span = nn.Conv2d(channels // reduction, self.g*(kernel_size**2), 1)
+        self.reduce = nn.Conv2d(in_channels, in_channels // reduction, 1)
+        self.batch_norm = nn.BatchNorm2d(in_channels//reduction)
+        self.span = nn.Conv2d(in_channels // reduction, self.g*(kernel_size**2), 1)
         self.unfold = nn.Unfold(kernel_size, padding=padding, stride=stride, dilation=dilation)
     
     def forward(self, X):
         '''
         Input should be an image tensor of shape: (batch_size, channels, h, w)
         '''
+        # KERNEL GENERATION
         W = self.reduce(self.o(X))
-        # print('W.shape', W.shape)
+  
         W = nn.ReLU()(self.batch_norm(W))
         W = self.span(W)
-        # print('W.shape', W.shape)
+ 
         b, c, h, w = W.shape
         W = W.view(b, self.g, 1, self.k**2, w*h)
-        print(W.shape)
 
+        # INVOLUTION
         patches = self.unfold(X)
         patches = patches.view(b, self.g, self.group_ch, self.k**2, w*h)
-        out = patches*W # (b, g, g//c, k*k, w*h)
+        out = patches*W 
 
         # output width and height should be w / stride and h / stride
-
         out = out.view(b, self.out_channels, self.k**2, w*h).sum(dim=2)
         out = out.view(b, self.out_channels, w, h)
 
@@ -146,7 +146,6 @@ class MobileNetV2(nn.Module):
         input_channel = _make_divisible(input_channel * width_mult, round_nearest)
         
         self.last_channel = _make_divisible(last_channel * max(1.0, width_mult), round_nearest)
-
         
         features = [
             Conv2dNormActivation(3, input_channel, kernel_size=3, stride=2, norm_layer=norm_layer, activation_layer=nn.ReLU6)
@@ -164,7 +163,7 @@ class MobileNetV2(nn.Module):
         features.append(Conv2dNormActivation(input_channel, self.last_channel, kernel_size=1, norm_layer=norm_layer, activation_layer=nn.ReLU6))
 
         # complete CNN architecture
-        self.features = nn.Sequential(*features) 
+        self.features = nn.Sequential(*features)  
 
         # weight initialization
         for m in self.modules():
