@@ -35,7 +35,7 @@ class Bottleneck(nn.Module):
                                stride=self.conv1_stride, 
                                bias=False)
         
-        self.conv2 = Inv2d(self.mid_channels,kernel_size=7, stride=self.conv2_stride, reduction=4)
+        self.conv2 = Inv2d(self.mid_channels,kernel_size=3, stride=self.conv2_stride, reduction=4, group_ch=self.mid_channels // 2)
         self.conv3 = nn.Conv2d(in_channels=self.mid_channels, out_channels=self.out_channels, 
                                kernel_size=1, bias=False)
         
@@ -64,6 +64,7 @@ class Bottleneck(nn.Module):
             identity = downsample(identity)
         
         out = identity + out
+        return out
 
     def forward(self, x):
         out = self._inner_forward(x)
@@ -136,7 +137,7 @@ class RedNet(nn.Module):
     }
 
     def __init__(self, depth, in_channels=3, stem_channels=64, base_channels=64, 
-                 num_stages=4, strides=(1, 2, 2, 2), dilations=(1, 1, 1, 1), 
+                 num_stages=4, strides=(1, 1, 1, 1), dilations=(1, 1, 1, 1), 
                  expansion=4):
         super(RedNet, self).__init__()
 
@@ -160,7 +161,7 @@ class RedNet(nn.Module):
         _in_channels = stem_channels
         _out_channels = base_channels * self.expansion
 
-        for i, num_blocks in enumerate(self.stage_blocks):
+        for i, num_blocks in enumerate(stage_blocks):
             stride = strides[i]
             dilation = dilations[i]
             res_layer = self._make_res_layer(self.block, num_blocks, _in_channels,
@@ -180,7 +181,7 @@ class RedNet(nn.Module):
         self.stem = nn.Sequential(
             nn.Conv2d(in_channels, stem_channels // 2, 
                       kernel_size=3, stride=2, padding=1), 
-            Inv2d(in_channels=stem_channels // 2, kernel_size=3, stride=1), 
+            Inv2d(in_channels=stem_channels // 2, kernel_size=3, stride=1, group_ch=in_channels // 2), 
             nn.BatchNorm2d(stem_channels // 2), 
             nn.ReLU(inplace=True), 
             nn.Conv2d(stem_channels // 2, stem_channels, kernel_size=3, 

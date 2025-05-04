@@ -3,6 +3,9 @@ class Inv2d(nn.Module):
     def __init__(self, in_channels, reduction=1, kernel_size=3, group_ch=1, stride=1, padding=1, dilation=1):
         super().__init__()
 
+        # TODO: adjust this as necessary
+
+        
         self.k = kernel_size
         self.group_ch = group_ch
         self.in_channels = in_channels
@@ -35,6 +38,9 @@ class Inv2d(nn.Module):
         W = W.view(b, self.g, 1, self.k**2, w*h)
 
         # INVOLUTION
+        # print(f'stride: {self.stride}')
+        # print(f'padding: {self.padding}')
+        
         patches = self.unfold(X)
         patches = patches.view(b, self.g, self.group_ch, self.k**2, w*h)
         out = patches*W 
