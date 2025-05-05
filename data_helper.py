@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from torchvision.io import decode_image
 from torch.utils.data import Dataset 
@@ -178,3 +177,26 @@ def overlay_heatmap(img_path, heatmap, alpha=.4):
     
     superimposed_img = cv2.addWeighted(img, alpha, heatmap, 1 - alpha, 0)
     return superimposed_img
+
+def show_gradcam_image(model_datapath, image_datapath, class_idx):
+    #class_idx: 0 = non informative, 1 = informative
+
+    #load in the model and image
+    model = torch.load(model_datapath, map_location=torch.device('cpu'))
+    image = Image.open(image_datapath)
+
+    # Define a transform to convert PIL 
+    # image to a Torch tensor
+    transform = transforms.Compose([
+        transforms.PILToTensor()
+    ])
+
+    # transform = transforms.PILToTensor()
+    # Convert the PIL image to Torch tensor
+    img_tensor = transform(image).unsqueeze(0)
+    img_tensor = img_tensor.type(torch.float32)
+
+    heatmap = data_helper.compute_gradcam(model, img_tensor, class_idx, conv_layer_name='0.features.18')
+    overlay =data_helper.overlay_heatmap(image_datapath, heatmap, alpha=.4)
+    img = Image.fromarray(overlay)
+    return img
