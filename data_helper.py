@@ -6,7 +6,8 @@ import torch
 import logging
 import numpy as np
 import cv2
-
+from PIL import Image 
+import torchvision.transforms as transforms
 
 # create a Dataset class to retrieve the data
 class SQLDataset_Informative(Dataset):
@@ -185,7 +186,7 @@ def show_gradcam_image(model_datapath, image_datapath, class_idx):
     img_tensor = transform(image).unsqueeze(0)
     img_tensor = img_tensor.type(torch.float32)
 
-    heatmap = data_helper.compute_gradcam(model, img_tensor, class_idx, conv_layer_name='0.features.18')
-    overlay =data_helper.overlay_heatmap(image_datapath, heatmap, alpha=.4)
+    heatmap = compute_gradcam(model, img_tensor, class_idx, conv_layer_name='conv4')   #'0.features.18')
+    overlay = overlay_heatmap(image_datapath, heatmap, alpha=.4)
     img = Image.fromarray(overlay)
     return img
