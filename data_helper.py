@@ -129,7 +129,7 @@ def compute_gradcam(model, img_tensor, class_idx, conv_layer_name='features.18')
     # this will give us a feature map to use for our grad cam
     activations = None
     def forward_hook(module, input, output):
-        nonlocal activations # COMMENT: what does this even mean??
+        nonlocal activations 
         activations = output
 
     hook = conv_layer.register_forward_hook(forward_hook)
